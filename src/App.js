@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import CardListContainer from './Container/CardListContainer';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
+import Form from "./Components/Form";
+import { Button, Container, Navbar } from 'react-bootstrap/';
 
-function App() {
+const App = () => {
+  const [loggedIn, setloggedIn] = React.useState(false);
+
+  const isUserLoggedIn = (loggedIn) => {
+    setloggedIn(loggedIn);
+  }
+
+  const handleLogout = () => {
+    setloggedIn(false);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Router>
+        <Switch>
+          <Route path="/home">
+            {loggedIn ? <>
+              <Navbar bg="light" expand="lg">
+                <Container>
+                  <Navbar.Brand href="#home">People's Interactive</Navbar.Brand>
+                  <Button onClick={handleLogout}>Logout</Button>
+                </Container>
+              </Navbar>
+              <CardListContainer />
+            </> : <Redirect to="/" />}
+          </Route>
+          <Route path="/">
+            {loggedIn ? (
+              <Redirect to="/home" />
+            ) : (
+              <Form isUserLoggedIn={isUserLoggedIn} />
+            )}
+          </Route>
+        </Switch>
+      </Router>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
